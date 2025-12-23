@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sargamela Editor - Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Oswald:wght@300;400;700&family=Playfair+Display:ital,wght@0,900;1,900&family=Montserrat:wght@100;300;700&family=Bungee+Shade&family=Unbounded:wght@900&family=Noto+Sans+Malayalam:wght@900&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-gold: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --brand-dark: #000000;
+            --brand-white: #ffffff;
+            --accent-glow: rgba(212, 175, 55, 0.05);
+        }
+
+        body {
+            background-color: #0a0a0a;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background 0.5s ease;
+        }
+
+        .certificate-canvas {
+            width: 800px;
+            height: 1100px;
+            background: var(--brand-dark);
+            color: var(--brand-white);
+            position: relative;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+            overflow: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .sunburst {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200%;
+            height: 200%;
+            background: repeating-conic-gradient(from 0deg, transparent 0deg 5deg, var(--accent-glow) 5deg 10deg);
+            z-index: 1;
+        }
+
+        .geometric-lines {
+            position: absolute;
+            inset: 0;
+            border: 30px solid transparent;
+            border-image: var(--gold-gradient) 1;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0.4;
+            z-index: 2;
+        }
+
+        .header-container {
+            position: relative;
+            z-index: 10;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .header-main {
+            font-family: 'Cinzel', serif;
+            font-size: 30px;
+            font-weight: 900;
+            color: var(--brand-black);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .header-sub-text {
+            font-family: 'Noto Sans Malayalam', serif;
+            font-size: 40px;
+            font-weight: 700;
+            color: var(--brand-gold);
+            letter-spacing: 4px;
+            margin-top: 25px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 4px rgba(0,0,0,0.5);
+            opacity: 0.9;
+        }
+
+        .sargamela-text {
+            font-family: 'Noto Sans Malayalam', sans-serif;
+            font-size: 85px;
+            color: var(--brand-gold);
+            line-height: 1.1;
+            margin-top: 0px;
+            margin-bottom: 20px;
+            z-index: 11;
+            font-weight: 900;
+            text-shadow: 0 4px 4px rgba(0,0,0,0.5);
+        }
+
+        .portrait-area {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hexagon-container {
+            width: 380px;
+            height: 380px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        }
+
+        .outer-hex {
+            width: 360px;
+            height: 360px;
+            background: var(--gold-gradient);
+            padding: 4px;
+            clip-path: path('M180 9 C 193.5 9, 333 90, 342 103.5 C 351 117, 351 243, 342 256.5 C 333 270, 193.5 351, 180 351 C 166.5 351, 27 270, 18 256.5 C 9 243, 9 117, 18 103.5 C 27 90, 166.5 9, 180 9 Z');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inner-hex {
+            width: 100%;
+            height: 100%;
+            background: var(--brand-dark);
+            clip-path: path('M180 12.6 C 191.7 12.6, 329.4 91.8, 338.4 105.3 C 347.4 118.8, 347.4 241.2, 338.4 254.7 C 329.4 268.2, 191.7 347.4, 180 347.4 C 168.3 347.4, 30.6 268.2, 21.6 254.7 C 12.6 241.2, 12.6 118.8, 21.6 105.3 C 30.6 91.8, 168.3 12.6, 180 12.6 Z');
+            overflow: hidden;
+        }
+
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .winner-name {
+            font-family: 'Cinzel', serif;
+            font-size: 48px;
+            font-weight: 900;
+            margin-top: -30px;
+            padding: 0 20px;
+            z-index: 20;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.9);
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        /* Information Section */
+        .info-stack {
+            z-index: 10;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            flex-grow: 1;
+        }
+
+        .info-item {
+            font-family: 'Oswald', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            color: var(--brand-white);
+            letter-spacing: 4px;
+            font-weight: 300;
+        }
+
+        .info-item.highlight {
+            color: var(--brand-gold);
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: 5px;
+            margin: 2px 0;
+        }
+
+        /* Tail Section */
+        .tail-section {
+            z-index: 10;
+            width: 100%;
+            margin-top: auto;
+            margin-bottom: 20px;
+        }
+
+        .congrats-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 68px;
+            color: var(--brand-gold);
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .madrasa-name {
+            font-family: 'Cinzel', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--brand-white);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            display: inline-block;
+            padding: 10px 40px 0 40px;
+        }
+
+        .controls {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            width: 280px;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+            color: white;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .theme-btn {
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-bottom: 8px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid transparent;
+            transition: 0.2s;
+            text-align: left;
+        }
+        .theme-btn:hover { background: rgba(255,255,255,0.1); }
+        .theme-btn.active { border-color: var(--brand-gold); background: rgba(212, 175, 55, 0.1); }
+
+        .swatch { width: 12px; height: 12px; border-radius: 50%; }
+
+        .status-msg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #d4af37;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        @media print {
+            @page {
+                size: portrait;
+                margin: 0;
+            }
+            .no-print { display: none !important; }
+            body { 
+                background: white; 
+                margin: 0;
+                padding: 0;
+                display: block;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .certificate-canvas { 
+                width: 100vw;
+                height: 100vh;
+                box-shadow: none; 
+                margin: 0; 
+                padding: 30px 40px;
+                page-break-after: avoid;
+                page-break-before: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls no-print">
+        <h2 class="font-bold text-sm mb-4 text-yellow-500 uppercase tracking-widest">Theme Options</h2>
+        <div id="themeGrid"></div>
+
+        <div class="mt-6 mb-5">
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Participant Photo</label>
+            <input type="file" id="imageInput" accept="image/*" class="text-xs text-gray-400 block w-full file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-yellow-600 file:text-white cursor-pointer">
+        </div>
+
+        <div class="flex flex-col gap-3">
+            <button onclick="saveTemplate()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-500 transition shadow-lg">
+                SAVE TEMPLATE
+            </button>
+            <button onclick="window.print()" class="w-full bg-yellow-600 text-black font-bold py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-yellow-500 transition shadow-lg">
+                EXPORT AS PDF
+            </button>
+        </div>
+    </div>
+
+    <div id="status" class="status-msg">Template Saved!</div>
+
+    <div class="certificate-canvas" id="mainCanvas">
+        <div class="sunburst"></div>
+        <div class="geometric-lines"></div>
+
+        <div class="header-container">
+            <h1 contenteditable="true" id="save-h-main" class="header-main">KNM Nadapuram</h1>
+            <h2 contenteditable="true" id="save-h-sub" class="header-sub-text">Madrasa</h2>
+        </div>
+
+        <h1 contenteditable="true" id="save-sargamela" class="sargamela-text">സർഗമേള</h1>
+
+        <div class="portrait-area">
+            <div class="hexagon-container" onclick="document.getElementById('imageInput').click()">
+                <div class="outer-hex">
+                    <div class="inner-hex">
+                        <img src="https://images.unsplash.com/photo-1519085188583-6ad28a7455d1?q=80&w=600" id="previewImg" class="profile-img">
+                    </div>
+                </div>
+            </div>
+            <div contenteditable="true" id="save-name" class="winner-name">PARTICIPANT NAME</div>
+        </div>
+
+        <div class="info-stack">
+            <div contenteditable="true" id="save-info1" class="info-item">Arabic Speech</div>
+            <div contenteditable="true" id="save-info2" class="info-item">Sub Junior</div>
+            <div contenteditable="true" id="save-info3" class="info-item highlight">First A Grade</div>
+        </div>
+
+        <div class="tail-section">
+            <div contenteditable="true" id="save-congrats" class="congrats-text">Congratulations</div>
+            <div contenteditable="true" id="save-madrasa" class="madrasa-name">Name of Madrasa</div>
+        </div>
+        
+    </div>
+
+    <script>
+        const themes = [
+            { id: 'classic-gold', name: 'Royal Gold', primary: '#d4af37', bg: '#000000', grad: 'linear-gradient(135deg, #bf953f, #fcf6ba, #b38728)', text: '#ffffff', glow: 'rgba(212, 175, 55, 0.05)' },
+            { id: 'elite-pearl', name: 'Elite Pearl', primary: '#d4af37', bg: '#f8fafc', grad: 'linear-gradient(135deg, #bf953f, #aa771c)', text: '#1e293b', glow: 'rgba(0,0,0,0.03)' },
+            { id: 'ruby-red', name: 'Velvet Ruby', primary: '#ef4444', bg: '#1a0505', grad: 'linear-gradient(135deg, #b91c1c, #f87171, #7f1d1d)', text: '#ffffff', glow: 'rgba(239, 68, 68, 0.06)' },
+            { id: 'emerald', name: 'Rich Emerald', primary: '#10b981', bg: '#062016', grad: 'linear-gradient(135deg, #047857, #6ee7b7, #064e3b)', text: '#ffffff', glow: 'rgba(16, 185, 129, 0.08)' },
+            { id: 'midnight-silver', name: 'Midnight Silver', primary: '#C0C0C0', bg: '#0f172a', grad: 'linear-gradient(135deg, #94a3b8, #f8fafc, #64748b)', text: '#ffffff', glow: 'rgba(148, 163, 184, 0.05)' },
+            { id: 'deep-blue', name: 'Sapphire Blue', primary: '#3b82f6', bg: '#0a192f', grad: 'linear-gradient(135deg, #1d4ed8, #93c5fd, #1e3a8a)', text: '#ffffff', glow: 'rgba(59, 130, 246, 0.06)' },
+            { id: 'obsidian-ruby', name: 'Obsidian Ruby', primary: '#ef4444', bg: '#000000', grad: 'linear-gradient(135deg, #ef4444, #fecaca, #b91c1c)', text: '#ffffff', glow: 'rgba(239, 68, 68, 0.06)' },
+            { id: 'cosmic-violet', name: 'Cosmic Violet', primary: '#a855f7', bg: '#1e1b4b', grad: 'linear-gradient(135deg, #c084fc, #f3e8ff, #7e22ce)', text: '#ffffff', glow: 'rgba(168, 85, 247, 0.08)' },
+            { id: 'rose-gold', name: 'Luxe Rose Gold', primary: '#f43f5e', bg: '#1e0a0a', grad: 'linear-gradient(135deg, #fb7185, #ffe4e6, #be123c)', text: '#ffffff', glow: 'rgba(244, 63, 94, 0.06)' },
+            { id: 'slate-minimal', name: 'Slate Onyx', primary: '#94a3b8', bg: '#020617', grad: 'linear-gradient(135deg, #475569, #cbd5e1, #1e293b)', text: '#ffffff', glow: 'rgba(255,255,255,0.03)' },
+            { id: 'forest-wealth', name: 'Forest Wealth', primary: '#eab308', bg: '#022c22', grad: 'linear-gradient(135deg, #fbbf24, #fef3c7, #854d0e)', text: '#ffffff', glow: 'rgba(234, 179, 8, 0.05)' }
+        ];
+
+        let currentThemeId = 'classic-gold';
+
+        function applyTheme(theme) {
+            const root = document.documentElement;
+            root.style.setProperty('--brand-gold', theme.primary);
+            root.style.setProperty('--brand-dark', theme.bg);
+            root.style.setProperty('--brand-white', theme.text);
+            root.style.setProperty('--gold-gradient', theme.grad);
+            root.style.setProperty('--accent-glow', theme.glow);
+            
+            currentThemeId = theme.id;
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.id === theme.id) btn.classList.add('active');
+            });
+        }
+
+        function saveTemplate() {
+            const data = {
+                theme: currentThemeId,
+                texts: {}
+            };
+            
+            document.querySelectorAll('[id^="save-"]').forEach(el => {
+                data.texts[el.id] = el.innerText;
+            });
+
+            localStorage.setItem('sargamela_template', JSON.stringify(data));
+            
+            const status = document.getElementById('status');
+            status.style.display = 'block';
+            setTimeout(() => status.style.display = 'none', 3000);
+        }
+
+        function loadTemplate() {
+            const saved = localStorage.getItem('sargamela_template');
+            if (saved) {
+                const data = JSON.parse(saved);
+                
+                // Load Theme
+                const theme = themes.find(t => t.id === data.theme) || themes[0];
+                applyTheme(theme);
+
+                // Load Texts
+                if (data.texts) {
+                    Object.keys(data.texts).forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.innerText = data.texts[id];
+                    });
+                }
+            } else {
+                applyTheme(themes[0]);
+            }
+        }
+
+        const themeGrid = document.getElementById('themeGrid');
+        themes.forEach(theme => {
+            const btn = document.createElement('button');
+            btn.className = 'theme-btn';
+            btn.dataset.id = theme.id;
+            btn.innerHTML = `<div class="swatch" style="background: ${theme.primary}"></div>${theme.name}`;
+            btn.onclick = () => applyTheme(theme);
+            themeGrid.appendChild(btn);
+        });
+
+        const imageInput = document.getElementById('imageInput');
+        const previewImg = document.getElementById('previewImg');
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => previewImg.src = e.target.result;
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Initialize
+        loadTemplate();
+    </script>
+</body>
+</html>
